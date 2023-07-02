@@ -1,0 +1,42 @@
+{% extends 'base_form.html' %}
+
+{% block title %}
+Signup
+{% endblock %}
+
+{% block header %}
+Create an Account
+{% endblock %}
+
+{% block bodycontent %}
+	<form method="POST" action='/signup'>
+<p>
+ 	  <label for="user">Username</label>
+  	  <input type="text" id="user" name="user" value={{user}}> <span style="color: red; font-weight: bolder;">{{userError}}</span> <br>
+</p>
+<p>
+  	  <label for="pass">Password</label>
+  	  <input type="password" id="pass" name="pass" value={{password}}> <span style="color: red; font-weight: bolder;">{{passError}}</span> <br>
+</p>
+<p>
+	  <label for="verify">Verify Password&nbsp;</label>
+  	  <input type="password" id="verify" name="verify" value={{verify}}> <span style="color: red; font-weight: bolder;">{{verifyError}}</span> <br>
+</p>
+<p>
+	  <label for="email">Email (optional)&nbsp;</label>
+  	  <input type="text" id="email" name="email" value={{email}}> <span style="color: red; font-weight: bolder;">{{emailError}}</span> <br>
+</p>
+<p>
+	<label for="studentType">I am a:</label> 
+    <select name="studentType" id="studentType"> 
+        <option value="seeker">Student seeking counsel</option> 
+        <option value="giver">Student providing counsel</option> 
+        <option value="both">Student seeking both</option> 
+        <option value="observer">Student who just wants to hang out</option> 
+    </select>
+</p>
+<p>
+	 <input type="submit" value="Submit">
+</p>
+ 	</form>
+{% endblock %}

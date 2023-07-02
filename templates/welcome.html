@@ -1,0 +1,17 @@
+{% extends 'base_form.html' %}
+
+{% block title %}
+Welcome Page
+{% endblock %}
+
+{% block header %}
+	Ready to jump in, {{username}}?
+{% endblock %}
+
+{% block bodycontent %}
+	<img src="/static/images/img.png" alt="Lightskin Stare">
+	<form action="/logout">
+    	<input type="submit" value="Logout"></input>
+	</form>
+
+{% endblock %}

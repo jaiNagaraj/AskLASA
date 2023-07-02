@@ -1,0 +1,32 @@
+{% extends 'base_post.html' %}
+
+{% block bodycontent %}
+	<p><a id="scroll-to-bottom">Scroll to bottom!</a></p>
+    {% for post in posts %}
+      <div class="post">
+        <div class="post-heading">
+          <div class="post-title">{{post.subject}}</div>
+          <div class="post-id">Posted by: {{post.user}}</div>
+	  <!-- see strftime.org, %X and %z are blank because its naive -->
+          <div class="post-date">{{post.create_date}}</div>
+        </div>
+        <div class="post-content">{{post.content}}</div>
+      </div>
+      {% endfor %}
+
+<br><br> <hr> <br><br>
+<h2>Join the forum!</h2>
+    <form method="post">
+      <label>
+        <div>Subject</div>
+        <input type="text" name="subject" value="{{ph_subject}}">
+      </label>
+      <label>
+        <div>Message</div>
+        <textarea name="content">{{ph_content}}</textarea>
+      </label>
+      <div class="error">{{ph_error}}</div>
+      <input type="submit">
+    </form>
+<p id="page-bottom">You have reached the bottom of this page!! Congrats!!</p>
+{% endblock %}

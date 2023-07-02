@@ -1,0 +1,25 @@
+h1
+{
+	color: red;
+}
+
+form
+{
+	display: table;
+}
+
+p
+{
+	display: table-row;
+}
+
+label
+{
+	color: blue;
+	display: table-cell;
+}
+
+input
+{
+	display: table-cell;
+}

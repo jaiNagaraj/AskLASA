@@ -1,0 +1,11 @@
+{% extends 'base_post.html' %}
+
+{% block bodycontent %}
+    <div class="post">
+        <div class="post-heading">
+          <div class="post-title">{{permapost.subject}}</div>
+          <div class="post-date">{{permapost.create_date}}</div>
+        </div>
+        <div class="post-content">{{permapost.content}}</div>
+      </div>
+{% endblock %}

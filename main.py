@@ -1,4 +1,3 @@
-# Lab: BLOG-1
 import flask as fk
 import re
 import logging
@@ -76,9 +75,9 @@ def valid_pw(name,pw,h):
 #############################################################################################
 
 
-def write_posts(posts):
+def write_posts(posts,forum):
   return fk.render_template(
-		"posts.html",
+		forum + ".html",
 		posts=posts
 	)
 
@@ -88,16 +87,16 @@ def write_perma_post(permapost):
 		permapost=permapost
 	)
 
-def write_new_post(subject, content):
+def write_new_post(content, forum):
 	with get_connection() as con:
 		cursor = con.cursor()
 		dateInUTC = str(dt.now().strftime("%m/%d/%Y %H:%M:%S"))
 		date = to_cst(dateInUTC)
-		postInsert = (date,subject,content,"Guest")
+		postInsert = (date,content,"Guest")
 		cookie = fk.request.cookies.get('user_id')
 		if not (cookie is None): id = check_secure_val(cookie)
 		if cookie is None or cookie == "" or (id is None):
-			cursor.execute("INSERT INTO posts (create_date,subject,content,user) VALUES (?,?,?,?)", postInsert)
+			cursor.execute("INSERT INTO " + forum + " (create_date,content,user) VALUES (?,?,?)", postInsert)
 		else:
 			users = get_users()
 			cookie = cookie.split("|")
@@ -108,8 +107,8 @@ def write_new_post(subject, content):
 				if user['hashvals'] == hashval:
 					betterPostInsert = (date,subject,content,user['usernames'])
 					break
-			cursor.execute("INSERT INTO posts (create_date,subject,content,user) VALUES (?,?,?,?)", postInsert)
-		row = cursor.execute("SELECT * FROM posts WHERE create_date = \"" + str(date) + "\"")
+			cursor.execute("INSERT INTO " + forum + " (create_date,content,user) VALUES (?,?,?)", postInsert)
+		row = cursor.execute("SELECT * FROM "+ forum +" WHERE create_date = \"" + str(date) + "\"")
 		arr = row.fetchall()[0]
 		return arr['id']
 
@@ -140,10 +139,10 @@ def new_post():
 
 
 
-def get_posts():
+def get_posts(forum):
 	with get_connection() as con:
 		cursor = con.cursor()
-		s = cursor.execute("SELECT * FROM posts ORDER BY create_date DESC limit 10")
+		s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date")
 		return s
 
 
@@ -175,7 +174,7 @@ def dict_factory(cursor, row):
 
 
 def get_connection():
-    connection = sqlite3.connect("blogbosts.db")
+    connection = sqlite3.connect("database.db")
     connection.row_factory = dict_factory
     return connection
 
@@ -363,7 +362,7 @@ def get_id_by_username(username):
 
 
 
-##################################### ROOT STUFFS ###########################################
+##################################### ROUTING STUFFS ########################################
 #############################################################################################
 
 
@@ -382,8 +381,108 @@ def faq():
 	method = fk.request.method
 	return fk.render_template('faq.html')
 
+@app.route('/ninth', methods=['GET','POST'])
+def ninth():
+	forum = "ninth"
+	method = fk.request.method
+	#return fk.render_template(forum + '.html')
+	method = fk.request.method
+	if method == 'POST':
+		content = fk.request.form["content"]
+		if content == "":
+			return fk.render_template(
+				forum + '.html',
+				ph_forum="/" + forum,
+				ph_content = content,
+				ph_error = "Please write something."
+			)
+		else:
+			write_new_post(content,forum)
+			return fk.redirect(fk.url_for(forum))
+	with get_connection() as con:
+		cursor = con.cursor()
+		cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, content TEXT, user TEXT)")
+		s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date DESC")
+		print([x for x in s])
+		return(write_posts(get_posts(forum), forum))
 
-@app.route('/blog', methods=['GET','POST'], strict_slashes=False)
+@app.route('/tenth', methods=['GET','POST'])
+def tenth():
+	forum = "tenth"
+	method = fk.request.method
+	#return fk.render_template(forum + '.html')
+	method = fk.request.method
+	if method == 'POST':
+		content = fk.request.form["content"]
+		if content == "":
+			return fk.render_template(
+				forum + '.html',
+				ph_forum="/" + forum,
+				ph_content = content,
+				ph_error = "Please write something."
+			)
+		else:
+			write_new_post(content,forum)
+			return fk.redirect(fk.url_for(forum))
+	with get_connection() as con:
+		cursor = con.cursor()
+		cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, content TEXT, user TEXT)")
+		s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date DESC")
+		print([x for x in s])
+		return(write_posts(get_posts(forum), forum))
+
+@app.route('/eleventh', methods=['GET','POST'])
+def eleventh():
+	forum = "eleventh"
+	method = fk.request.method
+	#return fk.render_template(forum + '.html')
+	method = fk.request.method
+	if method == 'POST':
+		content = fk.request.form["content"]
+		if content == "":
+			return fk.render_template(
+				forum + '.html',
+				ph_forum="/" + forum,
+				ph_content = content,
+				ph_error = "Please write something."
+			)
+		else:
+			write_new_post(content,forum)
+			return fk.redirect(fk.url_for(forum))
+	with get_connection() as con:
+		cursor = con.cursor()
+		cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, content TEXT, user TEXT)")
+		s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date DESC")
+		print([x for x in s])
+		return(write_posts(get_posts(forum), forum))
+
+@app.route('/twelfth', methods=['GET','POST'])
+def twelfth():
+	forum = "twelfth"
+	method = fk.request.method
+	#return fk.render_template(forum + '.html')
+	method = fk.request.method
+	if method == 'POST':
+		content = fk.request.form["content"]
+		if content == "":
+			return fk.render_template(
+				forum + '.html',
+				ph_forum="/" + forum,
+				ph_content = content,
+				ph_error = "Please write something."
+			)
+		else:
+			write_new_post(content,forum)
+			return fk.redirect(fk.url_for(forum))
+	with get_connection() as con:
+		cursor = con.cursor()
+		cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, content TEXT, user TEXT)")
+		s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date DESC")
+		print([x for x in s])
+		return(write_posts(get_posts(forum), forum))
+
+
+"""@app.route('/blog', methods=['GET','POST'], strict_slashes=False)
 def blogHome():
 	method = fk.request.method
 	if method == 'POST':
@@ -401,12 +500,15 @@ def blogHome():
 			return fk.redirect(fk.url_for('blogHome'))
 	with get_connection() as con:
 		cursor = con.cursor()
-		cursor.execute("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY, create_date TEXT, subject TEXT, content TEXT, user TEXT)")
+		cursor.execute("CREATE TABLE IF NOT EXISTS ninth (id INTEGER PRIMARY KEY, create_date TEXT, subject TEXT, content TEXT, user TEXT)")
+		cursor.execute("CREATE TABLE IF NOT EXISTS tenth (id INTEGER PRIMARY KEY, create_date TEXT, subject TEXT, content TEXT, user TEXT)")
+		cursor.execute("CREATE TABLE IF NOT EXISTS eleventh (id INTEGER PRIMARY KEY, create_date TEXT, subject TEXT, content TEXT, user TEXT)")
+		cursor.execute("CREATE TABLE IF NOT EXISTS twelfth (id INTEGER PRIMARY KEY, create_date TEXT, subject TEXT, content TEXT, user TEXT)")
 		cursor.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, usernames TEXT, hashvals TEXT, emails TEXT)")
 		s = cursor.execute("SELECT * FROM posts ORDER BY create_date DESC limit 10")
 		print([x for x in s])
 		if method == "GET":
-			return(write_posts(get_posts()))
+			return(write_posts(get_posts()))"""
 
 
 

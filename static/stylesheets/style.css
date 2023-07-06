@@ -60,8 +60,8 @@ input[type=text] {
 }
 
 textarea {
-  width: 500px;
-  height: 300px;
+  height: 150px;
+  margin: auto;
   font-size: 17px;
   font-family: monospace;
 }
@@ -82,13 +82,13 @@ input[type=submit] {
     text-decoration: none;
 }
 
-.post + .post {
-    margin-top: 15px;
+.post {
+    margin-top: 2em;
 }
 
 .post-heading {
     position: relative;
-    border-bottom: 3px solid white;
+    border-bottom: 3px solid gray;
 }
 
 .post-title {
@@ -108,7 +108,7 @@ input[type=submit] {
     position: absolute;
     right: 0px;
     bottom: 0px;
-    color: white;
+    color: black;
 
 }
 

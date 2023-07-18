@@ -1,0 +1,159 @@
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 14px;
+	min-height: 100vh;
+  	display: flex;
+  	flex-direction: column;
+	background-color: beige;
+}
+
+.login-area {
+    font-size: 13px;
+	font-family: Verdana;
+    color: white;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.login-link {
+    color: white;
+    text-decoration: none;
+}
+
+.login-link:visited {
+    color: white;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+	font-family: Verdana;
+	color: white;
+}
+
+.error {
+    color: red;
+}
+
+label {
+  display: block;
+  font-size: 20px;
+	font-family: Verdana;
+}
+
+label + label {
+    margin-top: 20px;
+}
+
+input[type=text] {
+    padding: 0.1em;
+	font-size: 1.2em;
+	width: 100%;
+}
+
+input[type=password] {
+    padding: 0.1em;
+	font-size: 1.2em;
+	width: 100%;
+}
+
+textarea {
+  height: 150px;
+  margin: auto;
+  font-size: 17px;
+  font-family: monospace;
+}
+
+input[type=submit] {
+  	font-size: 24px;
+	background-color: black;
+	color: white;
+	width: 100%;
+	border-radius: 4px;
+}
+
+.main-title {
+    display: block;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+	font-family: Verdana;
+    text-align: center;
+    margin-bottom: 30px;
+    text-decoration: none;
+}
+
+.post {
+    margin-top: 2em;
+}
+
+.post-heading {
+    position: relative;
+    border-bottom: 3px solid gray;
+}
+
+.post-title {
+    font-size: 24px;
+    font-weight: bold;
+	font-family: Verdana;
+
+    text-decoration: none;
+    color: white;
+}
+
+.post-title:visited {
+    color: white;
+}
+
+.post-date {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    color: black;
+
+}
+
+.post-content {
+    margin-top: 5px;
+}
+
+.age {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    color:white;
+    font-size: 12px;
+}
+
+html {
+  scroll-behavior: smooth;
+	
+}
+
+#scroll-to-bottom {
+  font-weight: bold;
+	font-family: Verdana;
+  color: green;
+}
+
+label
+{
+	color: black;
+}
+
+hr
+{
+	color: black;
+}
+
+
+.footer
+{
+  margin-top: auto;
+}

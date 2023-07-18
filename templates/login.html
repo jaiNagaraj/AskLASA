@@ -1,0 +1,49 @@
+{% extends 'base_form.html' %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block header %}
+Login
+{% endblock %}
+
+{% block bodycontent %}
+<div class="container-fluid m-5">
+<div class="shadow container" style="margin: auto; height: 0; width: 35%; padding-bottom: 35%;">
+	<div>
+	<form method="POST" action='/auth'>
+<p>
+ 	  <label for="user">Username</label>
+  	  <input type="text" id="user" name="user" placeholder="Enter your username" value={{user}}>
+</p>
+<p>
+  	  <label for="pass">Password</label>
+  	  <input type="password" id="pass" name="pass" placeholder="Enter your password" value={{password}}>
+</p>
+<span style="color: red; font-weight: bolder;">{{loginError}}</span> <br>
+<p>
+	 <input type="submit" value="Submit">
+</p>
+ 	</form>
+	<hr>
+	<div id="g_id_onload"
+	     data-client_id="453928047443-0bbpt77htqnhkau7npn8ikb5sucb3r0k.apps.googleusercontent.com"
+	     data-context="signin"
+	     data-ux_mode="popup"
+	     data-login_uri="http://localhost:3000/auth"
+	     data-auto_prompt="false">
+	</div>
+	
+	<div class="g_id_signin"
+	     data-type="standard"
+	     data-shape="rectangular"
+	     data-theme="outline"
+	     data-text="signin_with"
+	     data-size="large"
+	     data-logo_alignment="left">
+	</div>
+	</div>
+</div>
+</div>
+{% endblock %}

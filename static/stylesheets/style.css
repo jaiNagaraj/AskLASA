@@ -52,11 +52,15 @@ label + label {
 }
 
 input[type=text] {
-    width: 500px;
-    font-size: 20px;
-	font-family: Verdana;
-    padding: 2px;
-    font-family: monospace;
+    padding: 0.1em;
+	font-size: 1.2em;
+	width: 100%;
+}
+
+input[type=password] {
+    padding: 0.1em;
+	font-size: 1.2em;
+	width: 100%;
 }
 
 textarea {
@@ -67,8 +71,11 @@ textarea {
 }
 
 input[type=submit] {
-  font-size: 24px;
-	font-family: Verdana;
+  	font-size: 24px;
+	background-color: black;
+	color: white;
+	width: 100%;
+	border-radius: 4px;
 }
 
 .main-title {
@@ -137,12 +144,12 @@ html {
 
 label
 {
-	color: white;
+	color: black;
 }
 
 hr
 {
-	color: white;
+	color: black;
 }
 
 

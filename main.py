@@ -113,7 +113,7 @@ def write_new_post(content, forum):
 		return arr['id']
 
 
-@app.route('/newpost', methods=["GET", "POST"], strict_slashes=False)
+"""@app.route('/newpost', methods=["GET", "POST"], strict_slashes=False)
 def new_post():
 	method = fk.request.method
 	if method == 'GET':
@@ -135,7 +135,7 @@ def new_post():
 			)
 		else:
 			write_new_post(subject,content)
-			return fk.redirect(fk.url_for('blogHome'))
+			return fk.redirect(fk.url_for('blogHome'))"""
 
 
 

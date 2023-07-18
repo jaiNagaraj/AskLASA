@@ -1,4 +1,6 @@
 venv/
-replit.nex
+replit.nix
 pyproject.toml
 poetry.lock
+.breakpoints
+.replit

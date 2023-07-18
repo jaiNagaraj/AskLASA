@@ -9,13 +9,15 @@ import hmac		 #import the hmac library
 import random
 import string
 import profanity
+import urllib.parse
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 app = fk.Flask(
     __name__,
     static_folder="static"
 )
-
-
+CLIENT_ID = "453928047443-0bbpt77htqnhkau7npn8ikb5sucb3r0k.apps.googleusercontent.com"
 
 
 
@@ -105,7 +107,7 @@ def write_new_post(content, forum):
 			for user in users:
 				print(user['hashvals'])
 				if user['hashvals'] == hashval:
-					betterPostInsert = (date,subject,content,user['usernames'])
+					betterPostInsert = (date,content,user['usernames'])
 					break
 			cursor.execute("INSERT INTO " + forum + " (create_date,content,user) VALUES (?,?,?)", postInsert)
 		row = cursor.execute("SELECT * FROM "+ forum +" WHERE create_date = \"" + str(date) + "\"")
@@ -324,6 +326,37 @@ def login():
 			set_user_cookie(res,hashCookie)
 			return res
 
+@app.route('/auth', methods=["GET","POST"])
+def auth():
+	method = fk.request.method
+	if method == "POST":
+		token = fk.request.get_data()
+		user = fk.request.form.get("user",None)
+		password = fk.request.form.get("pass",None)
+		if user is not None and password is not None:
+			print('yummy')
+			print(user,password)
+			return fk.make_response(fk.redirect(fk.url_for("root"), code=302))
+		token2 = token
+		token_decoded = token2.decode()
+		data = urllib.parse.parse_qs(token_decoded)
+		print(token)
+		CSRF_TOKEN_POST = data['g_csrf_token'][0]
+		CSRF_TOKEN_COOKIE = fk.request.cookies.get('g_csrf_token')
+		if not CSRF_TOKEN_COOKIE:
+			fk.abort(400, 'No CSRF token in Cookie.')
+		if not CSRF_TOKEN_POST:
+			fk.abort(400, 'No CSRF token in POST request.')		
+		if not CSRF_TOKEN_COOKIE == CSRF_TOKEN_POST:
+			fk.abort(400, 'Failed to verify double submit CSRF cookie. No hacking, please!')
+		
+		# No CSRF attack, yay!
+		idinfo = id_token.verify_oauth2_token(data['credential'][0], requests.Request(), CLIENT_ID)
+		print(idinfo)
+		print(idinfo.get('hd',"None"))
+		print(idinfo['sub'])
+		return fk.make_response(fk.redirect(fk.url_for("root"), code=302))
+
 @app.route('/welcome', methods=["GET", "POST"])
 def welcome():
 	cookie = fk.request.cookies.get('user_id')
@@ -509,6 +542,17 @@ def blogHome():
 		print([x for x in s])
 		if method == "GET":
 			return(write_posts(get_posts()))"""
+
+
+##################################### ERROR HANDLING STUFFS #####################################
+#################################################################################################
+
+@app.errorhandler(400)
+def bad_request(e):
+	if not e.description:
+		return e.description, 400
+	else:
+		return 'Bad request :(', 400
 
 
 

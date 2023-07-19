@@ -9,7 +9,7 @@
 	  <script src="https://accounts.google.com/gsi/client" async></script>
 	</head>
 	
-  <body <!--onload="checkCookie()"-->>
+  <body> <!--onload="checkCookie()"-->
     {% include 'nav.html' %}
     <div id="content">
 		<h1 style="font-weight: bolder; font-size: 4em; text-align: center; color: #D2AD2D;">{% block header %}{% endblock %}</h1>
@@ -40,7 +40,7 @@
 	        	<textarea style="margin: auto; width: 100%" name="content" id="postArea" maxlength="1000">{{ph_content}}</textarea>
 			  </div>
 	      </label>
-	      <div class="error">{{ph_error}}</div>
+	      <div class="error" style="margin: auto; width: 75%; font-weight: bolder;">{{ph_error}}</div>
 		  <div style="margin: auto; width: 75%;">
 	      <input type="submit" value="Send Post">
 		  </div>

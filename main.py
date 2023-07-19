@@ -8,7 +8,7 @@ import hashlib   #import the python hash function library
 import hmac		 #import the hmac library
 import random
 import string
-import profanity
+from better_profanity import profanity
 import urllib.parse
 from google.oauth2 import id_token
 from google.auth.transport import requests
@@ -414,6 +414,11 @@ def faq():
 	method = fk.request.method
 	return fk.render_template('faq.html')
 
+@app.route('/privacy', methods=['GET','POST'])
+def privacy():
+	method = fk.request.method
+	return fk.render_template('privacy.html')
+
 @app.route('/ninth', methods=['GET','POST'])
 def ninth():
 	forum = "ninth"
@@ -423,15 +428,29 @@ def ninth():
 	if method == 'POST':
 		content = fk.request.form["content"]
 		if content == "":
+			with get_connection() as con:
+				cursor = con.cursor()
+				cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, content TEXT, user TEXT)")
+				s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date DESC")
+				return fk.render_template(
+					forum + '.html',
+					ph_forum = "/" + forum,
+					ph_content = content,
+					ph_error = "Please write something.",
+					posts = get_posts(forum)
+				)
+		elif profanity.contains_profanity(content):
 			return fk.render_template(
 				forum + '.html',
-				ph_forum="/" + forum,
+				ph_forum = "/" + forum,
 				ph_content = content,
-				ph_error = "Please write something."
+				ph_error = "Foul language detected! Use better words.",
+				posts = get_posts(forum)
 			)
 		else:
 			write_new_post(content,forum)
 			return fk.redirect(fk.url_for(forum))
+	# GET REQUEST
 	with get_connection() as con:
 		cursor = con.cursor()
 		cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, content TEXT, user TEXT)")
@@ -450,7 +469,7 @@ def tenth():
 		if content == "":
 			return fk.render_template(
 				forum + '.html',
-				ph_forum="/" + forum,
+				ph_forum = "/" + forum,
 				ph_content = content,
 				ph_error = "Please write something."
 			)

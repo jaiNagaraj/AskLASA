@@ -121,6 +121,7 @@ input[type=submit] {
 
 .post-content {
     margin-top: 5px;
+	width: 95%;
 }
 
 .age {

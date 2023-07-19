@@ -1,0 +1,35 @@
+{% extends 'base_form.html' %}
+
+{% block title %}
+Setup Account
+{% endblock %}
+
+{% block header %}
+Finish setting up your account
+{% endblock %}
+
+{% block bodycontent %}
+<div class="container-fluid m-5">
+<div class="shadow container" style="margin: auto; height: 0; width: 50%; padding-bottom: 50%;">
+	<div>
+	<form method="POST" action='/setup'>
+<p>
+ 	  <label for="user">Username</label>
+  	  <input type="text" id="user" name="user" value={{user}}> <span style="color: red; font-weight: bolder;">{{userError}}</span> <br>
+</p>
+<p>
+  	  <label for="pass">Password</label>
+  	  <input type="password" id="pass" name="pass" value={{password}}> <span style="color: red; font-weight: bolder;">{{passError}}</span> <br>
+</p>
+<p>
+	  <label for="verify">Verify Password&nbsp;</label>
+  	  <input type="password" id="verify" name="verify" value={{verify}}> <span style="color: red; font-weight: bolder;">{{verifyError}}</span> <br>
+</p><br>
+<p>
+	 <input type="submit" value="Submit">
+</p>
+ 	</form>
+	</div>
+</div>
+</div>
+{% endblock %}

@@ -9,34 +9,23 @@ Create an Account
 {% endblock %}
 
 {% block bodycontent %}
-	<form method="POST" action='/signup'>
 <p>
- 	  <label for="user">Username</label>
-  	  <input type="text" id="user" name="user" value={{user}}> <span style="color: red; font-weight: bolder;">{{userError}}</span> <br>
+	To create an account, you must sign up via your school Google account. This way, I can ensure that all users are from AISD.
 </p>
-<p>
-  	  <label for="pass">Password</label>
-  	  <input type="password" id="pass" name="pass" value={{password}}> <span style="color: red; font-weight: bolder;">{{passError}}</span> <br>
-</p>
-<p>
-	  <label for="verify">Verify Password&nbsp;</label>
-  	  <input type="password" id="verify" name="verify" value={{verify}}> <span style="color: red; font-weight: bolder;">{{verifyError}}</span> <br>
-</p>
-<p>
-	  <label for="email">Email (optional)&nbsp;</label>
-  	  <input type="text" id="email" name="email" value={{email}}> <span style="color: red; font-weight: bolder;">{{emailError}}</span> <br>
-</p>
-<p>
-	<label for="studentType">I am a:</label> 
-    <select name="studentType" id="studentType"> 
-        <option value="seeker">Student seeking counsel</option> 
-        <option value="giver">Student providing counsel</option> 
-        <option value="both">Student seeking both</option> 
-        <option value="observer">Student who just wants to hang out</option> 
-    </select>
-</p>
-<p>
-	 <input type="submit" value="Submit">
-</p>
- 	</form>
+<div id="g_id_onload"
+     data-client_id="453928047443-0bbpt77htqnhkau7npn8ikb5sucb3r0k.apps.googleusercontent.com"
+     data-context="signup"
+     data-ux_mode="popup"
+     data-login_uri="https://asklasa.jainagaraj.repl.co/auth"
+     data-auto_prompt="false">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard"
+     data-shape="rectangular"
+     data-theme="outline"
+     data-text="signup_with"
+     data-size="large"
+     data-logo_alignment="left">
+</div>
 {% endblock %}

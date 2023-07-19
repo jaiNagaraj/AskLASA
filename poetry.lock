@@ -85,6 +85,14 @@ tests-no-zope = ["hypothesis", "pympler", "pytest (>=4.3.0)", "pytest-xdist", "c
 tests_no_zope = ["hypothesis", "pympler", "pytest (>=4.3.0)", "pytest-xdist", "cloudpickle", "mypy (>=0.971,<0.990)", "pytest-mypy-plugins"]
 
 [[package]]
+name = "better-profanity"
+version = "0.7.0"
+description = "Blazingly fast cleaning swear words (and their leetspeak) in strings"
+category = "main"
+optional = false
+python-versions = "==3.*"
+
+[[package]]
 name = "bootstrap4"
 version = "0.1.0"
 description = "Bootstrap 4, packaged for Python."
@@ -638,7 +646,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10.0,<3.11"
-content-hash = "ef8caa26348d382fc010bca4387c91b148b116426b8cb3734a25e979ee532959"
+content-hash = "723c6f32912e33b57fce97622d42942381b21a3f69459e21da22169204ac531d"
 
 [metadata.files]
 aiohttp = []
@@ -647,6 +655,7 @@ argon2-cffi = []
 argon2-cffi-bindings = []
 async-timeout = []
 attrs = []
+better-profanity = []
 bootstrap4 = []
 certifi = []
 cffi = []

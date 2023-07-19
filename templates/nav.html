@@ -7,12 +7,18 @@
             </li>
         </ul>
 		<ul class="navbar-nav navbar-right">
+			{% if session['logged_in'] %}
+			<li class="nav-item">
+                <a style="font-size: 1.5em; color: lightgray" class="nav-link" href="/profile">My Profile</a>
+            </li>
+			{% else %}
             <li class="nav-item">
                 <a style="font-size: 1.5em; color: lightgray" class="nav-link" href="/login">Login</a>
             </li>
 			<li class="nav-item">
                 <a style="font-size: 1.5em; color: lightgray" class="nav-link" href="/signup">Signup</a>
             </li>
+			{% endif %}
         </ul>
     </div>
 </nav>

@@ -12,34 +12,45 @@
 
 <body>
 	{% include 'nav.html' %}
-	<h1>AskLASA's Privacy policy</h1>
+	<div class="container-fluid p-3">
+	<h1 style="font-size: 3em; font-weight: bolder;">AskLASA's Privacy Policy</h1>
+	<div style="margin-bottom: 3em;">
 	<i>Note: none of this is legally bound, nor backed up by a lawyer. This is only a notice for how your data is managed and used.</i>
-	<div class="container">
-		<h2 class="display-2">What data is used and seen?</h2>
+	</div>
+	<div style="padding-top: 1em; padding-bottom: 2em">
+		<h2>What data is used and seen?</h2>
 		<p>
 			When you register an account with AskLASA via Google Identity Services (GIS), I have access to your Google account name, email address, and profile picture, as well as the username you choose when creating an account. This is due to the unrestrictive scopes that my OAuth API has (essentially, the service that signs you in has access to only these things).<br><br>
 			I do <b>not</b> have direct access to the password you create, nor any other sensitive information about your Google account like your password(s), emails, and Google Drive items. I cannot delete your account. Your password is securely hashed and stored on AskLASA's SQL database.
 		</p>
 	</div>
-	<div class="container">
-		<h2 class="display-2">Can I delete my account?</h2>
+	<div style="padding-top: 1em; padding-bottom: 2em">
+		<h2>How do you use cookies? Is my activity being tracked?</h2>
+		<p>
+			The only cookies that are used are a session cookie which is cleared when you log out and GIS cookies which are only present if you log in through Google. The CSRF GIS cookie (called 'g_csrf_token' or something) is used to ensure the validity of a google sign-on, and the One Tap GIS cookie is not used (it's for this sign-in method called One Tap and this site doesn't use it).<br><br>
+			As for your activity, I do have logs of site connections, failures, and sign-ins, but I don't closely monitor what you do or type unless you post it. There aren't any ads on this site, so I can't sell your personal info for big cash money :(
+		</p>
+	</div>
+	<div style="padding-top: 1em; padding-bottom: 2em">
+		<h2>Can I delete my account?</h2>
 		<p>
 			Yes, there should be an option to do so on your profile page.
 		</p>
 	</div>
-	<div class="container">
-		<h2 class="display-2">Can I delete my posts?</h2>
+	<div style="padding-top: 1em; padding-bottom: 2em">
+		<h2>Can I delete my posts?</h2>
 		<p>
 			<b>No, you cannot delete anything you post, which is why I strongly advise you to think before you type.</b> I am not responsible for any hateful speech you spew, and you may be punished for anything harmful you write on here. This is the same as any other forum!<br><br>
 			If there is a post which you find offensive, you should first bring it up with an administrator or counselor. Then, you can <a href="mailto:jai.v.nagaraj@gmail.com" target="_blank">email me</a> and, with the admin/counselor's guidance, we can address the situation.
 		</p>
 	</div>
-	<div class="container">
-		<h2 class="display-2">Who is allowed on here? Can they see our posts?</h2>
+	<div style="padding-top: 1em; padding-bottom: 2em">
+		<h2>Who is allowed on here? Can they see our posts?</h2>
 		<p>
 			Users must be logged in to see and make posts on this website. Additionally, those users must have an <i>AISD issued email address.</i> This ensures the safety of the students using this website - we wouldn't want any Internet stranger to be able to view our conversations!<br><br>
 			And yes, this does mean that teachers can make accounts too. Again, think before you type.
 		</p>
+	</div>
 	</div>
 	{% include 'foot.html' %}
 </body>

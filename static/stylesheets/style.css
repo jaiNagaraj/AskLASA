@@ -67,10 +67,10 @@ textarea {
   height: 150px;
   margin: auto;
   font-size: 17px;
-  font-family: monospace;
+  font-family: serif;
 }
 
-input[type=submit] {
+.post-submit {
   	font-size: 24px;
 	background-color: black;
 	color: white;
@@ -83,7 +83,6 @@ input[type=submit] {
     color: white;
     font-size: 40px;
     font-weight: bold;
-	font-family: Verdana;
     text-align: center;
     margin-bottom: 30px;
     text-decoration: none;
@@ -96,13 +95,13 @@ input[type=submit] {
 .post-heading {
     position: relative;
     border-bottom: 3px solid gray;
+	font-family: sans-serif;
 }
 
 .post-title {
     font-size: 24px;
     font-weight: bold;
-	font-family: Verdana;
-
+	font-family: sans-serif;
     text-decoration: none;
     color: white;
 }
@@ -116,12 +115,13 @@ input[type=submit] {
     right: 0px;
     bottom: 0px;
     color: black;
-
+	font-family: sans-serif;
 }
 
 .post-content {
     margin-top: 5px;
 	width: 95%;
+	font-family: sans-serif;
 }
 
 .age {

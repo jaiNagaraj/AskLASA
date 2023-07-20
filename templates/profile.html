@@ -6,6 +6,7 @@
     <title>My Profile</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="static/stylesheets/style.css">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="https://accounts.google.com/gsi/client" async defer></script>
 
     
@@ -25,13 +26,38 @@
 		<p class="h1" style="font-weight: bolder;">
 			Account Management
 		</p>
-		<button class="btn btn-outline-info">Change username</button>
-		<button class="btn btn-outline-info">Change password</button>
-		<button class="btn btn-outline-danger">Delete account</button>
+		<a href="/changeUsername"><button class="btn btn-outline-info">Change username</button></a>
+		<a href="/changePassword"><button class="btn btn-outline-info">Change password</button></a>
+		<button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#myModal">Delete account</button>
+		<div class="modal" id="myModal">
+  			<div class="modal-dialog">
+  			  <div class="modal-content">
+			
+  			    <!-- Modal Header -->
+  			    <div class="modal-header">
+  			      <h4 class="modal-title">Are you sure you want to delete your account?</h4>
+  			    </div>
+			
+  			    <!-- Modal body -->
+  			    <div class="modal-body">
+  			      You can always make another account with this same email, but all of your data will be deleted from our database until then.
+  			    </div>
+			
+  			    <!-- Modal footer -->
+  			    <div class="modal-footer">
+  			      <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+					<form method="POST" action="/deleteAccount">
+				  	<input type="submit" value="Delete" class="btn btn-danger"></input>
+					</form>
+  			    </div>
+			
+  			  </div>
+  			</div>
+		</div>
 	</div>
 
-	<form action="/logout">
-		<input type="submit" value="Logout" class="btn btn-dark"></input>
+	<form method="POST" action="/logout">
+		<input style="width: 100%;" type="submit" value="Logout" class="btn btn-dark"></input>
 	</form>
 	{% include 'foot.html' %}
 </body>

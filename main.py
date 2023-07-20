@@ -98,26 +98,26 @@ def write_new_post(content, forum):
 	with get_connection() as con:
 		cursor = con.cursor()
 		cdt = dt.fromtimestamp(time.time(), tz=ZoneInfo("America/Chicago"))
-		print(cdt)
-		date = cdt.strftime("%m/%d/%Y at %I:%M:%S")
-		postInsert = (date,content,"Guest")
+		date = str(cdt.strftime("%m/%d/%Y at %I:%M:%S"))
+		cdt = str(cdt)
+		postInsert = (cdt,date,content,"Guest")
 		cookie = fk.request.cookies.get('user_id')
 		if not (cookie is None): id = check_secure_val(cookie)
 		if cookie is None or cookie == "" or (id is None):
-			cursor.execute("INSERT INTO " + forum + " (create_date,content,user) VALUES (?,?,?)", postInsert)
+			cursor.execute("INSERT INTO " + forum + " (create_date,date_formatted,content,user) VALUES (?,?,?,?)", postInsert)
 		else:
 			users = get_users()
 			cookie = cookie.split("|")
 			id = cookie[0]
 			for user in users:
 				if user['id'] == id:
-					betterPostInsert = (date,content,user['usernames'])
+					betterPostInsert = (cdt,date,content,user['usernames'])
 					print('WE FOUND IT!!!')
 					break
-			cursor.execute("INSERT INTO " + forum + " (create_date,content,user) VALUES (?,?,?)", betterPostInsert)
-		row = cursor.execute("SELECT * FROM " + forum + " WHERE create_date = \"" + str(date) + "\"")
-		arr = row.fetchall()[0]
-		return arr['id']
+			cursor.execute("INSERT INTO " + forum + " (create_date,date_formatted,content,user) VALUES (?,?,?,?)", betterPostInsert)
+		#row = cursor.execute("SELECT * FROM " + forum + " WHERE create_date = \"" + str(date) + "\"")
+		#arr = row.fetchall()[0]
+		#return arr['id']
 
 
 """@app.route('/newpost', methods=["GET", "POST"], strict_slashes=False)
@@ -373,7 +373,9 @@ def auth():
 		
 		# No CSRF attack, yay!
 		idinfo = id_token.verify_oauth2_token(data['credential'][0], requests.Request(), CLIENT_ID)
-		print(idinfo)
+		domain = idinfo.get('hd',None)
+		#if domain is None or (domain != G_SUITE_DOMAIN or domain != G_SUITE_DOMAIN_STUDENTS):
+		#	return write_login("", "", "Error: non-AISD email address.")
 		userID = idinfo['sub']
 		email = idinfo['email']
 		name = idinfo['given_name'] + " " + idinfo['family_name']
@@ -476,6 +478,8 @@ def profile():
 			print('yay!')
 			name = user['names']
 			username = user['usernames']
+			if username is None or username == "":
+				return fk.make_response(fk.redirect(fk.url_for("setup"), code=302))
 			email = user['emails']
 			pfp = user['pfp']
 			break
@@ -488,12 +492,175 @@ def profile():
 		pfp=pfp
 	)
 
-@app.route('/logout', methods=["GET","POST"], strict_slashes=False)	
+@app.route('/logout', methods=["POST"], strict_slashes=False)	
 def logout():
 	fk.session['logged_in'] = False
 	res = fk.make_response(fk.redirect(fk.url_for("login"), code=302))
 	set_user_cookie(res,"")
 	return res
+
+@app.route('/changeUsername', methods=["GET","POST"])
+def changeUsername():
+	method = fk.request.method
+	if method == "GET":
+		cookie = fk.request.cookies.get('user_id')
+		if not (cookie is None): id = check_secure_val(cookie)
+		if cookie is None or cookie == "" or (id is None):
+			fk.abort(400,"You are not logged in, so you cannot access that page.")
+		else:
+			return fk.render_template(
+				"changeUsername.html"
+			)
+	else:
+		cookie = fk.request.cookies.get('user_id')
+		id = check_secure_val(cookie)
+		users = get_users()
+		for user in users:
+			if str(user['id']) == str(id):
+				username = user['usernames']
+				if username is None or username == "":
+					return fk.make_response(fk.redirect(fk.url_for("setup"), code=302))
+				break
+		
+		new = fk.request.form["new"]
+		verify = fk.request.form["verify"]
+		newError = ''
+		verifyError = ''
+		hasErrors = False
+
+		# Check for invalid input
+		validUser = valid_user(new, get_usernames())
+		if not validUser == "We good":
+			if validUser == "User exists":
+				newError = "Username already taken"
+			else:
+				newError = 'Your username must contain 3-20 characters from this character set: [a-z,A-Z,0-9,_,-]'
+			hasErrors = True
+		if username == new:
+			newError = "The new username cannot be the same as the old one."
+			hasErrors = True
+		if not check_login(username,verify):
+			verifyError = "Wrong password."
+			hasErrors = True
+
+		
+		if (hasErrors):
+			return fk.render_template(
+				"changeUsername.html",
+				new = new,
+				verify = verify,
+				newError = newError,
+				verifyError = verifyError
+			)
+		else:
+			cookie = fk.request.cookies.get('user_id')
+			userID = str(check_secure_val(cookie))
+			with get_connection() as con:
+				cursor = con.cursor()
+				userTuple = (username,)
+				newTuple = (new,)
+				h = make_pw_hash(new,verify)
+				cursor.execute(f"UPDATE ninth SET user = '{new}' WHERE user = ?",userTuple)
+				cursor.execute(f"UPDATE tenth SET user = '{new}' WHERE user = ?",userTuple)
+				cursor.execute(f"UPDATE eleventh SET user = '{new}' WHERE user = ?",userTuple)
+				cursor.execute(f"UPDATE twelfth SET user = '{new}' WHERE user = ?",userTuple)
+				cursor.execute(f"UPDATE users SET usernames = ? WHERE id = '{userID}'", newTuple)
+				cursor.execute(f"UPDATE users SET hashvals = ? WHERE id = '{userID}'", (h,))
+			return fk.make_response(fk.redirect(fk.url_for("profile"), code=302))
+
+@app.route('/changePassword', methods=["GET","POST"])
+def changePassword():
+	method = fk.request.method
+	if method == "GET":
+		cookie = fk.request.cookies.get('user_id')
+		if not (cookie is None): id = check_secure_val(cookie)
+		if cookie is None or cookie == "" or (id is None):
+			fk.abort(400,"You are not logged in, so you cannot access that page.")
+		else:
+			return fk.render_template(
+				"changePassword.html"
+			)
+	else:
+		cookie = fk.request.cookies.get('user_id')
+		id = check_secure_val(cookie)
+		users = get_users()
+		for user in users:
+			if str(user['id']) == str(id):
+				username = user['usernames']
+				if username is None or username == "":
+					return fk.make_response(fk.redirect(fk.url_for("setup"), code=302))
+				break
+		
+		old = fk.request.form["old"]
+		new = fk.request.form["new"]
+		verify = fk.request.form["verify"]
+		oldError = ''
+		newError = ''
+		verifyError = ''
+		hasErrors = False
+
+		# Check for invalid input
+		if not check_login(username,old):
+			oldError = "Wrong password."
+			hasErrors = True
+		if not valid_pass(new):
+			newError = 'Your password must contain 3-20 characters.'
+			hasErrors = True
+		if old == new:
+			newError = 'The new password cannot be the same as the old one.'
+			hasErrors = True
+		if not new == verify:
+			verifyError = 'Passwords do not match.'
+			hasErrors = True
+
+		
+		if (hasErrors):
+			return fk.render_template(
+				"changePassword.html",
+				old = old,
+				new = new,
+				verify = verify,
+				oldError = oldError,
+				newError = newError,
+				verifyError = verifyError
+			)
+		else:
+			cookie = fk.request.cookies.get('user_id')
+			userID = str(check_secure_val(cookie))
+			h = make_pw_hash(username,new)
+			with get_connection() as con:
+				cursor = con.cursor()
+				cursor.execute(f"UPDATE users SET hashvals = ? WHERE id = '{userID}'", (h,))
+			return fk.make_response(fk.redirect(fk.url_for("profile"), code=302))
+
+@app.route('/deleteAccount', methods=["POST"])
+def deleteAccount():
+	# Find account ID and username
+	with get_connection() as con:
+		cursor = con.cursor()
+		cookie = fk.request.cookies.get('user_id')
+		id = check_secure_val(cookie)
+		users = get_users()
+		username = ""
+		for user in users:
+			if str(user['id']) == str(id):
+				username = user['usernames']
+				break
+		
+		# Modify all the posts with the deleted account
+		userTuple = (username,)
+		cursor.execute("UPDATE ninth SET user = '[Account deleted]' WHERE user = ?",userTuple)
+		cursor.execute("UPDATE tenth SET user = '[Account deleted]' WHERE user = ?",userTuple)
+		cursor.execute("UPDATE eleventh SET user = '[Account deleted]' WHERE user = ?",userTuple)
+		cursor.execute("UPDATE twelfth SET user = '[Account deleted]' WHERE user = ?",userTuple)
+
+		# Delete account
+		idTuple = (str(id),)
+		cursor.execute("DELETE FROM users WHERE id = ?",idTuple)
+		fk.session['logged_in'] = False
+		res = fk.make_response(fk.redirect(fk.url_for("root"), code=302))
+		set_user_cookie(res,"")
+		return res
 
 
 def set_user_cookie(res, val):
@@ -747,6 +914,16 @@ def not_found(e):
 	return fk.render_template(
 		str(error_code) + ".html",
 		error_code = str(error_code) + " Not Found Error",
+		error_msg = error_msg
+	), error_code
+
+@app.errorhandler(405)
+def wrong_method(e):
+	error_code = 405
+	error_msg = 'Wrong method to access this page. Likely due to a page which only accepts POST requests being accessed with a GET request.'
+	return fk.render_template(
+		str(error_code) + ".html",
+		error_code = str(error_code) + " Method Not Allowed",
 		error_msg = error_msg
 	), error_code
 

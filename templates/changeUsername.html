@@ -1,28 +1,24 @@
 {% extends 'base_form.html' %}
 
 {% block title %}
-Setup Account
+Change Username
 {% endblock %}
 
 {% block header %}
-Finish setting up your account
+Change your username
 {% endblock %}
 
 {% block bodycontent %}
 <div class="container-fluid m-5">
 <div class="shadow container" style="margin: auto; height: 0; width: 50%; padding-bottom: 50%;">
 	<div>
-	<form method="POST" action='/setup'>
+	<form method="POST" action='/changeUsername'>
 <p>
- 	  <label for="user">Username</label>
-  	  <input type="text" id="user" name="user" value={{user}}> <span style="color: red; font-weight: bolder;">{{userError}}</span> <br>
+  	  <label for="new">New username</label>
+  	  <input type="text" id="new" name="new" value={{new}}> <span style="color: red; font-weight: bolder;">{{newError}}</span> <br>
 </p>
 <p>
-  	  <label for="pass">Password</label>
-  	  <input type="password" id="pass" name="pass" value={{password}}> <span style="color: red; font-weight: bolder;">{{passError}}</span> <br>
-</p>
-<p>
-	  <label for="verify">Verify Password&nbsp;</label>
+	  <label for="verify">Enter password to confirm&nbsp;</label>
   	  <input type="password" id="verify" name="verify" value={{verify}}> <span style="color: red; font-weight: bolder;">{{verifyError}}</span> <br>
 </p><br>
 <p>

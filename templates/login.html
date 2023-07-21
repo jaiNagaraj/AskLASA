@@ -9,7 +9,7 @@ Login
 {% endblock %}
 
 {% block bodycontent %}
-<div class="container-fluid m-5">
+<div class="container-fluid p-0" style="margin-top: 4em; margin-bottom: 4em;">
 <div class="shadow container" style="margin: auto; height: 0; width: 35%; padding-bottom: 35%;">
 	<div>
 	<form method="POST" action='/auth'>
@@ -27,6 +27,7 @@ Login
 </p>
  	</form>
 	<hr>
+	<div class="googleButton">
 	<div id="g_id_onload"
 	     data-client_id="453928047443-0bbpt77htqnhkau7npn8ikb5sucb3r0k.apps.googleusercontent.com"
 	     data-context="signin"
@@ -42,6 +43,7 @@ Login
 	     data-text="signin_with"
 	     data-size="large"
 	     data-logo_alignment="left">
+	</div>
 	</div>
 	</div>
 </div>

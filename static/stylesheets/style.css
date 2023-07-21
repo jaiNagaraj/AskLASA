@@ -158,3 +158,9 @@ hr
 {
   margin-top: auto;
 }
+
+.googleButton
+{
+	margin: auto;
+	width: 200px;
+}

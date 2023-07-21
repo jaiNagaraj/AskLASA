@@ -9,23 +9,28 @@ Create an Account
 {% endblock %}
 
 {% block bodycontent %}
-<p>
-	To create an account, you must sign up via your school Google account. This way, I can ensure that all users are from AISD.
-</p>
-<div id="g_id_onload"
-     data-client_id="453928047443-0bbpt77htqnhkau7npn8ikb5sucb3r0k.apps.googleusercontent.com"
-     data-context="signup"
-     data-ux_mode="popup"
-     data-login_uri="https://asklasa.jainagaraj.repl.co/auth"
-     data-auto_prompt="false">
-</div>
-
-<div class="g_id_signin"
-     data-type="standard"
-     data-shape="rectangular"
-     data-theme="outline"
-     data-text="signup_with"
-     data-size="large"
-     data-logo_alignment="left">
+<div class="container" style="margin: auto;">
+	<p class="text-center">
+		To create an account, you must sign up via your school Google account. This way, I can ensure that all users are from AISD.
+	</p>
+	<div class="googleButton">
+		<div id="g_id_onload"
+		     data-client_id="453928047443-0bbpt77htqnhkau7npn8ikb5sucb3r0k.apps.googleusercontent.com"
+		     data-context="signup"
+		     data-ux_mode="popup"
+		     data-login_uri="https://asklasa.jainagaraj.repl.co/auth"
+		     data-auto_prompt="false">
+		</div>
+		
+		<div class="g_id_signin"
+		     data-type="standard"
+		     data-shape="rectangular"
+		     data-theme="outline"
+		     data-text="signup_with"
+		     data-size="large"
+		     data-logo_alignment="left"
+			 data-width="200">
+		</div>
+	</div>
 </div>
 {% endblock %}

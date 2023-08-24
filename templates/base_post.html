@@ -16,23 +16,26 @@
 		<h1 style="font-weight: bolder; font-size: 4em; text-align: center; color: #D2AD2D;">{% block header %}{% endblock %}</h1>
 		
 		{% if session['logged_in'] %}
-        <button style="text-align: center; margin: auto; width: 100%;" onclick="window.scrollTo(0, document.body.scrollHeight);" class="btn btn-dark">Scroll to bottom!</button>
+		
+        <button style="text-align: center; margin: auto; width: 100%;" onclick="document.getElementById('page-bottom').scrollIntoView();" class="btn btn-dark sticky-top">Scroll to bottom!</button>
+	<div id="postList" style="overflow-y: auto; max-height: 1000px;">
     {% for post in posts %}
       <div style="margin: 2em 3em; width: 95%;" class="post">
         <div class="post-heading">
           <div class="post-title">{{post.subject}}</div>
-          <div class="post-id"><b>Posted by:</b> {{post.user}}</div>
+          <div class="post-id"><b>{{post.user}}</b></div>
 	  <!-- see strftime.org, %X and %z are blank because its naive -->
           <div class="post-date">{{post.date_formatted}}</div>
         </div>
         <div class="post-content">{{post.content}}</div>
       </div>
       {% endfor %}
-
+	  <div id="page-bottom" style="margin-top: 1em;"></div>
+	</div>
 	<br><br> <hr> <br><br>
 	<div style="margin: auto; width: 75%" id="chatArea">
 		<h2 class="text-dark" style="margin: auto; width: 75%;">Join the forum!</h2>
-	    <form method="post" action={{ph_forum}}>
+	    <!--<form method="post" action={{ph_forum}}>-->
 	      <!-- <label>
 	        <div>Subject</div>
 	        <input type="text" name="subject" value="{{ph_subject}}">
@@ -43,11 +46,11 @@
 	        	<textarea style="margin: auto; width: 100%" name="content" id="postArea" maxlength="1000">{{ph_content}}</textarea>
 			  </div>
 	      </label>
-	      <div class="error" style="margin: auto; width: 75%; font-weight: bolder;">{{ph_error}}</div>
+	      <div id="postError" class="error" style="margin: auto; width: 75%; font-weight: bolder;">{{ph_error}}</div>
 		  <div style="margin: auto; width: 75%;">
-	      <input class="post-submit" type="submit" value="Send Post">
+	      <input class="btn btn-dark post-submit" type="submit" value="Send Post" onclick="make_post();" style='margin-bottom: 1em;'>
 		  </div>
-	    </form>
+	    <!--</form>-->
 		</div>
 		{% else %}
 		<div class="container-fluid">
@@ -56,50 +59,85 @@
 		</p>
 		</div>
 		{% endif %}
-		<div id="page-bottom" style="margin-top: 1em;"></div>
 	</div>
 	{% include 'foot.html' %}
 	  <script>
-		  var scrollToBottom = document.getElementById("scroll-to-bottom");
-		  var pageBottom = document.getElementById("page-bottom");
-
-		  scrollToBottom.addEventListener("click", function() {
-  			window.scrollTo(0, document.body.scrollHeight);
-		  })
-
-		  function getCookie(name) {
-		      var dc = document.cookie;
-		      var prefix = name + "=";
-		      var begin = dc.indexOf("; " + prefix);
-		      if (begin == -1) {
-		          begin = dc.indexOf(prefix);
-		          if (begin != 0) return null;
-		      }
-		      else
-		      {
-		          begin += 2;
-		          var end = document.cookie.indexOf(";", begin);
-		          if (end == -1) {
-		          end = dc.length;
-		          }
-		      }
-		      // because unescape has been deprecated, replaced with decodeURI
-		      //return unescape(dc.substring(begin + prefix.length, end));
-		      return decodeURI(dc.substring(begin + prefix.length, end));
-		  } 
-		  
-		  function checkCookie() 
+		  //Fade function for new posts
+		  function fade(item, i)
 		  {
-			  if (getCookie("user_id") == null)
-			  {
-				  console.log("YIPPEEKIYAYAAYAYA")
-				  const p = document.createElement("p");
-				  p.innerHTML = "You need to log in before you can post stuff on here.";
-				  p.style.fontWeight = "bolder";
-				  const chat = document.getElementById("chatArea");
-				  chat.replaceWith(p);
-			  }
+			  i += 0.01;
+			  item.style.opacity = i;
+			  if (i < 1) setTimeout(()=> fade(item, i), 1);
 		  }
+		  
+		  // Make post JS
+		  function make_post()
+		  {
+			  console.log("Making post...");
+			  var textContent = $("#postArea").val();
+			  const urlData = (window.location.href).split("/");
+			  var forum = urlData[urlData.length - 1];
+			  var server_data = [
+				  {"content": textContent},
+ 			  ];
+			  
+ 			  $.ajax({
+ 			    type: "POST",
+ 			    url: forum,
+ 			    data: JSON.stringify(server_data),
+ 			    contentType: "application/json",
+ 			    dataType: 'json',
+ 			    success: function(result) {
+ 			      	console.log("Post submitted successfully!");
+					if (result.error != null)
+					{
+						console.log(result.error);
+						var err = document.getElementById("postError");
+						err.innerHTML = result.error;
+					}
+					else
+					{
+						var chat = document.getElementById("chatArea");
+						var postList = document.getElementById("postList");
+			  			var newPost = document.createElement('div');
+			  			newPost.classList.add("post");
+			  			newPost.style.margin = "2em 3em";
+			  			newPost.style.width = "95%";
+						newPost.innerHTML = '' + 
+			  			'<div class="post-heading">' +
+          	  			'<div class="post-title"></div>' + 
+          	  			'<div class="post-id"><b>'+result.user+'</b></div>' + 
+          	  			'<div class="post-date">'+result.date+'</div>' +
+        	  			'</div>' +
+        	  			'<div class="post-content">'+result.content+'</div>';
+						const isScrolledToBottom = postList.scrollHeight - postList.clientHeight <= postList.scrollTop + 1;
+			  			postList.appendChild(newPost);
+						if (isScrolledToBottom) postList.scrollTop = postList.scrollHeight - postList.clientHeight;
+						fade(newPost,0.01)
+						//document.getElementById('page-bottom').scrollIntoView();
+						// Clear textbox
+						$("#postArea").val("");
+					}
+ 			    } 
+ 			  });
+		  }
+	  </script>
+	  <script>
+		  // Fetch data repeatedly from server
+		  setInterval(function() {
+			  const urlData = (window.location.href).split("/");
+			  var forum = urlData[urlData.length - 1];
+			  $.get(forum, function(data,status) {
+				  let postStart = data.indexOf("<div style=\"margin: 2em 3em; width: 95%;\" class=\"post\">");
+				  let postEnd = data.indexOf("<br><br>") - 12;
+				  //console.log(data.slice(postStart,postEnd));
+				  var postList = document.getElementById("postList");
+				  const isScrolledToBottom = postList.scrollHeight - postList.clientHeight <= postList.scrollTop + 1;
+				  postList.innerHTML = data.slice(postStart,postEnd);
+				  if (isScrolledToBottom) postList.scrollTop = postList.scrollHeight - postList.clientHeight;
+				  //document.getElementById('page-bottom').scrollIntoView();
+			  });
+		  }, 5000);
 	  </script>
   </body>
 </html>

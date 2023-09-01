@@ -3,3 +3,4 @@ flask_socketio==5.3.5
 better_profanity
 google
 gunicorn
+python-dateutil

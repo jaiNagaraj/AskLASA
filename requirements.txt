@@ -4,3 +4,4 @@ better_profanity
 google-auth
 gunicorn
 python-dateutil
+requests

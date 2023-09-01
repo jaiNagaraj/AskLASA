@@ -93,6 +93,19 @@ optional = false
 python-versions = "==3.*"
 
 [[package]]
+name = "bidict"
+version = "0.22.1"
+description = "The bidirectional mapping library for Python."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+docs = ["sphinx", "sphinx-copybutton", "furo"]
+lint = ["pre-commit"]
+test = ["hypothesis", "pytest", "pytest-benchmark", "pytest-cov", "pytest-xdist", "sortedcollections", "sortedcontainers", "sphinx"]
+
+[[package]]
 name = "bootstrap4"
 version = "0.1.0"
 description = "Bootstrap 4, packaged for Python."
@@ -193,6 +206,21 @@ Werkzeug = ">=2.2.2"
 [package.extras]
 async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
+
+[[package]]
+name = "flask-socketio"
+version = "5.3.5"
+description = "Socket.IO integration for Flask applications"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+Flask = ">=0.9"
+python-socketio = ">=5.0.2"
+
+[package.extras]
+docs = ["sphinx"]
 
 [[package]]
 name = "frozenlist"
@@ -421,6 +449,19 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 six = ">=1.5"
 
 [[package]]
+name = "python-engineio"
+version = "4.6.1"
+description = "Engine.IO server and client for Python"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+asyncio_client = ["aiohttp (>=3.4)"]
+client = ["requests (>=2.21.0)", "websocket-client (>=0.54.0)"]
+docs = ["sphinx"]
+
+[[package]]
 name = "python-lsp-jsonrpc"
 version = "1.0.0"
 description = "JSON RPC 2.0 server library"
@@ -433,6 +474,22 @@ ujson = ">=3.0.0"
 
 [package.extras]
 test = ["coverage", "pytest-cov", "pytest", "pyflakes", "pycodestyle", "pylint"]
+
+[[package]]
+name = "python-socketio"
+version = "5.8.0"
+description = "Socket.IO server and client for Python"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+bidict = ">=0.21.0"
+python-engineio = ">=4.3.0"
+
+[package.extras]
+asyncio_client = ["aiohttp (>=3.4)"]
+client = ["requests (>=2.21.0)", "websocket-client (>=0.54.0)"]
 
 [[package]]
 name = "pytoolconfig"
@@ -646,7 +703,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10.0,<3.11"
-content-hash = "723c6f32912e33b57fce97622d42942381b21a3f69459e21da22169204ac531d"
+content-hash = "fc430178521f7840f4cafdda420ef651fe7bc65aa9005e18577bace123554025"
 
 [metadata.files]
 aiohttp = []
@@ -656,6 +713,7 @@ argon2-cffi-bindings = []
 async-timeout = []
 attrs = []
 better-profanity = []
+bidict = []
 bootstrap4 = []
 certifi = []
 cffi = []
@@ -665,6 +723,7 @@ colorama = []
 cryptography = []
 debugpy = []
 flask = []
+flask-socketio = []
 frozenlist = []
 grpcio = []
 idna = []
@@ -687,7 +746,9 @@ pycryptodomex = []
 pyflakes = []
 pyseto = []
 python-dateutil = []
+python-engineio = []
 python-lsp-jsonrpc = []
+python-socketio = []
 pytoolconfig = []
 replit = []
 replit-python-lsp-server = []

@@ -1,4 +1,6 @@
 import flask as fk
+import os
+from flask_socketio import SocketIO
 import re
 import logging
 import sqlite3
@@ -19,10 +21,11 @@ app = fk.Flask(
     __name__,
     static_folder="static"
 )
-CLIENT_ID = "453928047443-0bbpt77htqnhkau7npn8ikb5sucb3r0k.apps.googleusercontent.com"
+CLIENT_ID = os.environ['CLIENT_ID']
 G_SUITE_DOMAIN_STUDENTS = "stu.austinisd.org"
 G_SUITE_DOMAIN = "austinisd.org"
-app.secret_key = b'\x02H\t\xf7\x82\xf2\x96\xa7"f\x12\xb4\x14\x07]\x82'
+app.secret_key = eval(os.environ['APP_SECRET_KEY'])
+
 
 
 
@@ -32,7 +35,7 @@ app.secret_key = b'\x02H\t\xf7\x82\xf2\x96\xa7"f\x12\xb4\x14\x07]\x82'
 #############################################################################################
 
 def hash_str(s):
-	SECRET='imsosecret'.encode()
+	SECRET=os.environ['START_KEY'].encode()
 	return hmac.new(SECRET,s.encode(),"md5").hexdigest()
 
 def make_secure_val(s):
@@ -95,7 +98,7 @@ def write_perma_post(permapost):
 	)
 
 def write_new_post(content, forum):
-	print("hello!")
+	#print("hello!")
 	with get_connection() as con:
 		cursor = con.cursor()
 		cdt = dt.fromtimestamp(time.time(), tz=ZoneInfo("America/Chicago"))
@@ -113,7 +116,7 @@ def write_new_post(content, forum):
 			for user in users:
 				if user['id'] == id:
 					betterPostInsert = (cdt,date,content,user['usernames'])
-					print('WE FOUND IT!!!')
+					#print('WE FOUND IT!!!')
 					break
 			cursor.execute("INSERT INTO " + forum + " (create_date,date_formatted,content,user) VALUES (?,?,?,?)", betterPostInsert)
 			results = {"content":content,"date":date,"user":betterPostInsert[3]}
@@ -365,7 +368,7 @@ def auth():
 		token2 = token
 		token_decoded = token2.decode()
 		data = urllib.parse.parse_qs(token_decoded)
-		print(token)
+		#print(token)
 		CSRF_TOKEN_POST = data['g_csrf_token'][0]
 		CSRF_TOKEN_COOKIE = fk.request.cookies.get('g_csrf_token')
 		if not CSRF_TOKEN_COOKIE:
@@ -384,8 +387,8 @@ def auth():
 		email = idinfo['email']
 		name = idinfo['given_name'] + " " + idinfo['family_name']
 		pfpLink = idinfo['picture']
-		print(idinfo.get('hd',"None"))
-		print(idinfo['sub'])
+		#print(idinfo.get('hd',"None"))
+		#print(idinfo['sub'])
 		users = get_users()
 		userFound = False
 		hasUsername = False
@@ -480,7 +483,7 @@ def profile():
 	name = ""
 	for user in users:
 		if str(user['id']) == str(id):
-			print('yay!')
+			#print('yay!')
 			name = user['names']
 			username = user['usernames']
 			if username is None or username == "":
@@ -724,7 +727,7 @@ def ninth():
 		post_data = fk.request.get_json()
 		content = post_data[0]['content']
 		if content == "":
-			print("HIII")
+			#print("HIII")
 			return fk.jsonify({'error':"Please write something."})
 			#with get_connection() as con:
 			#	cursor = con.cursor()
@@ -752,7 +755,7 @@ def ninth():
 			fk.session['logged_in'] = False
 			return (fk.redirect(fk.url_for("login"), code=302))
 		else:
-			print('we made it')
+			#print('we made it')
 			return write_new_post(content,forum)
 	# GET REQUEST
 	with get_connection() as con:
@@ -771,7 +774,7 @@ def tenth():
 		post_data = fk.request.get_json()
 		content = post_data[0]['content']
 		if content == "":
-			print("HIII")
+			#print("HIII")
 			return fk.jsonify({'error':"Please write something."})
 			#with get_connection() as con:
 			#	cursor = con.cursor()
@@ -799,7 +802,7 @@ def tenth():
 			fk.session['logged_in'] = False
 			return (fk.redirect(fk.url_for("login"), code=302))
 		else:
-			print('we made it')
+			#print('we made it')
 			return write_new_post(content,forum)
 	# GET REQUEST
 	with get_connection() as con:
@@ -818,7 +821,7 @@ def eleventh():
 		post_data = fk.request.get_json()
 		content = post_data[0]['content']
 		if content == "":
-			print("HIII")
+			#print("HIII")
 			return fk.jsonify({'error':"Please write something."})
 			#with get_connection() as con:
 			#	cursor = con.cursor()
@@ -846,7 +849,7 @@ def eleventh():
 			fk.session['logged_in'] = False
 			return (fk.redirect(fk.url_for("login"), code=302))
 		else:
-			print('we made it')
+			#print('we made it')
 			return write_new_post(content,forum)
 	# GET REQUEST
 	with get_connection() as con:
@@ -865,7 +868,7 @@ def twelfth():
 		post_data = fk.request.get_json()
 		content = post_data[0]['content']
 		if content == "":
-			print("HIII")
+			#print("HIII")
 			return fk.jsonify({'error':"Please write something."})
 			#with get_connection() as con:
 			#	cursor = con.cursor()
@@ -893,7 +896,7 @@ def twelfth():
 			fk.session['logged_in'] = False
 			return (fk.redirect(fk.url_for("login"), code=302))
 		else:
-			print('we made it')
+			#print('we made it')
 			return write_new_post(content,forum)
 	# GET REQUEST
 	with get_connection() as con:

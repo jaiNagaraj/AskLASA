@@ -8,8 +8,8 @@ from dateutil import tz
 from datetime import datetime as dt
 from zoneinfo import ZoneInfo
 import time
-import hashlib   #import the python hash function library
-import hmac		 #import the hmac library
+import hashlib
+import hmac
 import random
 import string
 from better_profanity import profanity
@@ -46,7 +46,6 @@ def check_secure_val(h):
 	h_arr = h.split("|")
 	if (len(h_arr) == 1):
 		return None
-	#print(h_arr[0])
 	if (h_arr[0] == "None"): return None
 	s = int(h_arr[0])
 	hash = h_arr[1]
@@ -121,34 +120,6 @@ def write_new_post(content, forum):
 			cursor.execute("INSERT INTO " + forum + " (create_date,date_formatted,content,user) VALUES (?,?,?,?)", betterPostInsert)
 			results = {"content":content,"date":date,"user":betterPostInsert[3]}
 			return fk.jsonify(results)
-		#row = cursor.execute("SELECT * FROM " + forum + " WHERE create_date = \"" + str(date) + "\"")
-		#arr = row.fetchall()[0]
-		#return arr['id']
-
-
-"""@app.route('/newpost', methods=["GET", "POST"], strict_slashes=False)
-def new_post():
-	method = fk.request.method
-	if method == 'GET':
-		return fk.render_template(
-			'newpost.html',
-			ph_subject = '',
-			ph_content = '',
-			ph_error = ""
-		)
-	else:
-		subject = fk.request.form["subject"]
-		content = fk.request.form["content"]
-		if subject == "" or content == "":
-			return fk.render_template(
-				'newpost.html',
-				ph_subject = subject,
-				ph_content = content,
-				ph_error = "Please provide both a subject and content."
-			)
-		else:
-			write_new_post(subject,content)
-			return fk.redirect(fk.url_for('blogHome'))"""
 
 
 
@@ -266,51 +237,6 @@ def valid_email(email):
 def signup():
 	method = fk.request.method
 	return fk.render_template('signup.html')
-#	if fk.request.method == 'GET':
-#		return write_signup()
-#	else:
-#		user = fk.request.form["user"]
-#		password = fk.request.form["pass"]
-#		verify = fk.request.form["verify"]
-#		email = fk.request.form["email"]
-#		userError = ''
-#		passError = ''
-#		verifyError = ''
-#		emailError = ''
-#		hasErrors = False
-#
-#		# Check for invalid input
-#		validUser = valid_user(user, get_usernames())
-#		if not validUser == "We good":
-#			if validUser == "User exists":
-#				userError = "Username already taken"
-#			else:
-#				userError = 'Your username must contain 3-20 characters from this character set: [a-z,A-Z,0-9,_,-]'
-#			hasErrors = True
-#		if not valid_pass(password):
-#			passError = 'Your password must contain 3-20 characters.'
-#			hasErrors = True
-#		if not password == verify:
-#			verifyError = 'Passwords do not match.'
-#			hasErrors = True
-#		if not valid_email(email):
-#			emailError = 'Please enter a valid email.'
-#			hasErrors = True
-#
-#		
-#		if (hasErrors):
-#			return write_signup(user, password, verify, email, userError, passError, verifyError, emailError)
-#		else:
-#			h = make_pw_hash(user,password)
-#			with get_connection() as con:
-#				cursor = con.cursor()
-#				userInsert = (user,h,email)
-#				cursor.execute("INSERT INTO users (usernames,hashvals,emails) VALUES (?,?,?)", userInsert)
-#			res = fk.make_response(fk.redirect(fk.url_for("profile"), code=302))
-#			id = str(get_id_by_username(user))
-#			hashCookie = make_secure_val(id)
-#			set_user_cookie(res,hashCookie)
-#			return res
 
 @app.route('/login', methods=["GET", "POST"], strict_slashes=False)
 def login():
@@ -368,7 +294,6 @@ def auth():
 		token2 = token
 		token_decoded = token2.decode()
 		data = urllib.parse.parse_qs(token_decoded)
-		#print(token)
 		CSRF_TOKEN_POST = data['g_csrf_token'][0]
 		CSRF_TOKEN_COOKIE = fk.request.cookies.get('g_csrf_token')
 		if not CSRF_TOKEN_COOKIE:
@@ -381,14 +306,10 @@ def auth():
 		# No CSRF attack, yay!
 		idinfo = id_token.verify_oauth2_token(data['credential'][0], requests.Request(), CLIENT_ID)
 		domain = idinfo.get('hd',None)
-		#if domain is None or (domain != G_SUITE_DOMAIN or domain != G_SUITE_DOMAIN_STUDENTS):
-		#	return write_login("", "", "Error: non-AISD email address.")
 		userID = idinfo['sub']
 		email = idinfo['email']
 		name = idinfo['given_name'] + " " + idinfo['family_name']
 		pfpLink = idinfo['picture']
-		#print(idinfo.get('hd',"None"))
-		#print(idinfo['sub'])
 		users = get_users()
 		userFound = False
 		hasUsername = False
@@ -723,46 +644,23 @@ def ninth():
 	forum = "ninth"
 	method = fk.request.method
 	if method == 'POST':
-		#content = fk.request.form["content"]
 		post_data = fk.request.get_json()
 		content = post_data[0]['content']
 		if content == "":
-			#print("HIII")
 			return fk.jsonify({'error':"Please write something."})
-			#with get_connection() as con:
-			#	cursor = con.cursor()
-			#	cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, date_formatted TEXT, content TEXT, user TEXT)")
-			#	s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date DESC")
-			#	return fk.render_template(
-			#		forum + '.html',
-			#		ph_forum = "/" + forum,
-			#		ph_content = content,
-			#		ph_error = "Please write something.",
-			#		posts = get_posts(forum)
-			#	)
 		elif profanity.contains_profanity(content):
 			return fk.jsonify({'error':"Foul language detected! Use better words."})
-			#return fk.render_template(
-			#	forum + '.html',
-			#	ph_forum = "/" + forum,
-			#	ph_content = content,
-			#	ph_error = "Foul language detected! Use better words.",
-			#	posts = get_posts(forum)
-			#)
 		cookie = fk.request.cookies.get('user_id')
 		id = check_secure_val(cookie)
 		if cookie is None or cookie == "" or (id is None):
 			fk.session['logged_in'] = False
 			return (fk.redirect(fk.url_for("login"), code=302))
 		else:
-			#print('we made it')
 			return write_new_post(content,forum)
 	# GET REQUEST
 	with get_connection() as con:
 		cursor = con.cursor()
 		cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, date_formatted TEXT, content TEXT, user TEXT)")
-		#s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date DESC")
-		#print([x for x in s])
 		return(write_posts(get_posts(forum), forum))
 
 @app.route('/tenth', methods=['GET','POST'])
@@ -770,46 +668,23 @@ def tenth():
 	forum = "tenth"
 	method = fk.request.method
 	if method == 'POST':
-		#content = fk.request.form["content"]
 		post_data = fk.request.get_json()
 		content = post_data[0]['content']
 		if content == "":
-			#print("HIII")
 			return fk.jsonify({'error':"Please write something."})
-			#with get_connection() as con:
-			#	cursor = con.cursor()
-			#	cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, date_formatted TEXT, content TEXT, user TEXT)")
-			#	s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date DESC")
-			#	return fk.render_template(
-			#		forum + '.html',
-			#		ph_forum = "/" + forum,
-			#		ph_content = content,
-			#		ph_error = "Please write something.",
-			#		posts = get_posts(forum)
-			#	)
 		elif profanity.contains_profanity(content):
 			return fk.jsonify({'error':"Foul language detected! Use better words."})
-			#return fk.render_template(
-			#	forum + '.html',
-			#	ph_forum = "/" + forum,
-			#	ph_content = content,
-			#	ph_error = "Foul language detected! Use better words.",
-			#	posts = get_posts(forum)
-			#)
 		cookie = fk.request.cookies.get('user_id')
 		id = check_secure_val(cookie)
 		if cookie is None or cookie == "" or (id is None):
 			fk.session['logged_in'] = False
 			return (fk.redirect(fk.url_for("login"), code=302))
 		else:
-			#print('we made it')
 			return write_new_post(content,forum)
 	# GET REQUEST
 	with get_connection() as con:
 		cursor = con.cursor()
 		cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, date_formatted TEXT, content TEXT, user TEXT)")
-		#s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date DESC")
-		#print([x for x in s])
 		return(write_posts(get_posts(forum), forum))
 
 @app.route('/eleventh', methods=['GET','POST'])
@@ -817,46 +692,23 @@ def eleventh():
 	forum = "eleventh"
 	method = fk.request.method
 	if method == 'POST':
-		#content = fk.request.form["content"]
 		post_data = fk.request.get_json()
 		content = post_data[0]['content']
 		if content == "":
-			#print("HIII")
 			return fk.jsonify({'error':"Please write something."})
-			#with get_connection() as con:
-			#	cursor = con.cursor()
-			#	cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, date_formatted TEXT, content TEXT, user TEXT)")
-			#	s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date DESC")
-			#	return fk.render_template(
-			#		forum + '.html',
-			#		ph_forum = "/" + forum,
-			#		ph_content = content,
-			#		ph_error = "Please write something.",
-			#		posts = get_posts(forum)
-			#	)
 		elif profanity.contains_profanity(content):
 			return fk.jsonify({'error':"Foul language detected! Use better words."})
-			#return fk.render_template(
-			#	forum + '.html',
-			#	ph_forum = "/" + forum,
-			#	ph_content = content,
-			#	ph_error = "Foul language detected! Use better words.",
-			#	posts = get_posts(forum)
-			#)
 		cookie = fk.request.cookies.get('user_id')
 		id = check_secure_val(cookie)
 		if cookie is None or cookie == "" or (id is None):
 			fk.session['logged_in'] = False
 			return (fk.redirect(fk.url_for("login"), code=302))
 		else:
-			#print('we made it')
 			return write_new_post(content,forum)
 	# GET REQUEST
 	with get_connection() as con:
 		cursor = con.cursor()
 		cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, date_formatted TEXT, content TEXT, user TEXT)")
-		#s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date DESC")
-		#print([x for x in s])
 		return(write_posts(get_posts(forum), forum))
 
 @app.route('/twelfth', methods=['GET','POST'])
@@ -868,42 +720,20 @@ def twelfth():
 		post_data = fk.request.get_json()
 		content = post_data[0]['content']
 		if content == "":
-			#print("HIII")
 			return fk.jsonify({'error':"Please write something."})
-			#with get_connection() as con:
-			#	cursor = con.cursor()
-			#	cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, date_formatted TEXT, content TEXT, user TEXT)")
-			#	s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date DESC")
-			#	return fk.render_template(
-			#		forum + '.html',
-			#		ph_forum = "/" + forum,
-			#		ph_content = content,
-			#		ph_error = "Please write something.",
-			#		posts = get_posts(forum)
-			#	)
 		elif profanity.contains_profanity(content):
 			return fk.jsonify({'error':"Foul language detected! Use better words."})
-			#return fk.render_template(
-			#	forum + '.html',
-			#	ph_forum = "/" + forum,
-			#	ph_content = content,
-			#	ph_error = "Foul language detected! Use better words.",
-			#	posts = get_posts(forum)
-			#)
 		cookie = fk.request.cookies.get('user_id')
 		id = check_secure_val(cookie)
 		if cookie is None or cookie == "" or (id is None):
 			fk.session['logged_in'] = False
 			return (fk.redirect(fk.url_for("login"), code=302))
 		else:
-			#print('we made it')
 			return write_new_post(content,forum)
 	# GET REQUEST
 	with get_connection() as con:
 		cursor = con.cursor()
 		cursor.execute("CREATE TABLE IF NOT EXISTS " + forum + " (id INTEGER PRIMARY KEY, create_date TEXT, date_formatted TEXT, content TEXT, user TEXT)")
-		#s = cursor.execute("SELECT * FROM " + forum + " ORDER BY create_date DESC")
-		#print([x for x in s])
 		return(write_posts(get_posts(forum), forum))
 
 
